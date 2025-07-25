@@ -1,20 +1,22 @@
-import os
-from telegram.ext import ApplicationBuilder, CommandHandler
-from .handlers import start, score
+import telegram
+from telegram.ext import Updater, CommandHandler
+from decouple import config
+from . import handlers
+
+TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN')
 
 def main():
-    # Get the Telegram bot token from the environment variables.
-    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    """
+    Runs the bot.
+    """
+    updater = Updater(TELEGRAM_BOT_TOKEN)
+    dp = updater.dispatcher
 
-    # Create the Application and pass it your bot's token.
-    application = ApplicationBuilder().token(token).build()
+    dp.add_handler(CommandHandler("start", handlers.start))
+    dp.add_handler(CommandHandler("add_token", handlers.add_token))
 
-    # on different commands - answer in Telegram
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("score", score))
+    updater.start_polling()
+    updater.idle()
 
-    # Run the bot until the user presses Ctrl-C
-    application.run_polling()
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

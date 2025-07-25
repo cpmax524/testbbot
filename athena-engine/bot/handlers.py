@@ -1,25 +1,17 @@
 from telegram import Update
-from telegram.ext import ContextTypes
-from tasks.scoring_tasks import calculate_score_for_token
+from telegram.ext import CallbackContext
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends a message when the command /start is issued."""
-    await update.message.reply_text("Welcome to the Athena Bot!")
-
-async def score(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+def start(update: Update, context: CallbackContext):
     """
-    Calculates the Athena Score for a given token.
+    Sends a welcome message when the /start command is issued.
     """
-    # Get the token address from the command arguments.
-    try:
-        token_address = context.args[0]
-    except (IndexError, ValueError):
-        await update.message.reply_text("Please provide a token address.")
-        return
+    update.message.reply_text('Welcome to the Athena Bot!')
 
-    # Call the scoring task.
-    result = calculate_score_for_token.delay(token_address)
-
-    # Send the result to the user.
-    await update.message.reply_text(f"Calculating score for {token_address}...")
-    await update.message.reply_text(f"Score: {result.get()}")
+def add_token(update: Update, context: CallbackContext):
+    """
+    Adds a token to the user's watchlist.
+    """
+    # This is a placeholder. In a real application, you would add the token
+    # to the user's watchlist in the database.
+    token_symbol = context.args[0]
+    update.message.reply_text(f'Added {token_symbol} to your watchlist!')

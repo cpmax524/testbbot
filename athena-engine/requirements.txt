@@ -1,10 +1,9 @@
+python-telegram-bot
+python-decouple
+moralis
 fastapi
 uvicorn
 sqlalchemy
 psycopg2-binary
-python-telegram-bot
 celery
 redis
-pandas
-numpy
-moralis
