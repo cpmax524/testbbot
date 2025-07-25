@@ -1,9 +1,10 @@
 from pydantic import BaseModel
-from datetime import datetime
+import datetime
 
 class TokenBase(BaseModel):
     symbol: str
-    name: str
+    address: str
+    chain: str
 
 class TokenCreate(TokenBase):
     pass
@@ -16,14 +17,14 @@ class Token(TokenBase):
         orm_mode = True
 
 class UserBase(BaseModel):
+    telegram_id: int
     username: str
 
 class UserCreate(UserBase):
-    telegram_id: int
+    pass
 
 class User(UserBase):
     id: int
-    telegram_id: int
     tokens: list[Token] = []
 
     class Config:
@@ -31,14 +32,18 @@ class User(UserBase):
 
 class ScoreBase(BaseModel):
     score: float
+    mvrv_ratio: float
+    exchange_netflow: float
+    lth_supply_ratio: float
+    funding_rates: float
 
 class ScoreCreate(ScoreBase):
-    timestamp: datetime
+    pass
 
 class Score(ScoreBase):
     id: int
-    timestamp: datetime
     token_id: int
+    created_at: datetime.datetime
 
     class Config:
         orm_mode = True

@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=athena
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  redis:
+    image: redis
+  web:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+  bot:
+    build: .
+    command: python -m bot.main
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+  celery_worker:
+    build: .
+    command: celery -A tasks.celery worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
